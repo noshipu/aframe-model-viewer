@@ -3,8 +3,59 @@
   <head>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
     <script type="text/javascript" src="https://aframe.io/releases/0.2.0/aframe.min.js"></script>
+    <script type="text/javascript">
+      // Load check
+      AFRAME.registerComponent('model-loader', {
+        init: function () {
+          this.el.addEventListener('model-loaded', function () {
+            console.log('Finish model load');
+            $("#loading").hide();
+          });
+        }
+      });
+
+      // drag logic
+      $(function(){
+        var kRotateSpeed = 0.27;
+
+        var clicking = false;
+        var currentRotation;
+        var clickPosX = 0;
+        var clickPosY = 0;
+        var rotationY = 0;
+
+        // can touch device?
+        var isTouch = ('ontouchstart' in window);
+
+        $('#a-scene').bind({
+          'touchstart mousedown': function(e) {
+            clicking = true;
+            rotationY = $('#model-parent').attr("rotation").y;
+            clickPosX = (isTouch ? event.changedTouches[0].pageX : e.pageX);
+            clickPosY = (isTouch ? event.changedTouches[0].pageY : e.pageY);
+          },
+          'touchmove mousemove': function(e) {
+            if(clicking == false) return;
+            //e.preventDefault();
+            var x = (isTouch ? event.changedTouches[0].pageX : e.pageX) - clickPosX;
+            var y = (isTouch ? event.changedTouches[0].pageY : e.pageY) - clickPosY;
+            rotationY = rotationY + (x * kRotateSpeed);
+            $('#model-parent').attr(
+              "rotation",
+              "0 " + rotationY  + " 0"
+            );
+            clickPosX = (isTouch ? event.changedTouches[0].pageX : e.pageX);
+            clickPosY = (isTouch ? event.changedTouches[0].pageY : e.pageY);
+          },
+          'touchend mouseup mouseout': function(e) {
+            clicking = false;
+          }
+        });
+      });
+    </script>
   </head>
   <body>
+    <div id="loading">loading...</div>
     <a-scene id="a-scene" vr-mode-ui="enabled: false">
       <!-- Skybox -->
       <a-sky color="#9fbfff"></a-sky>
