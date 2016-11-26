@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+    <script type="text/javascript" src="https://aframe.io/releases/0.2.0/aframe.min.js"></script>
+  </head>
+  <body>
+    <a-scene id="a-scene" vr-mode-ui="enabled: false">
+      <!-- Skybox -->
+      <a-sky color="#9fbfff"></a-sky>
+
+      <!-- Camera -->
+      <a-entity camera position="0 2 4"></a-entity>
+
+      <!-- Lights -->
+      <a-entity light="type: ambient; color: #EEE"></a-entity>
+      <a-entity light="type: point; intensity: 0.35; distance: 50; decay: 2" position="0 10 0"></a-entity>
+      <a-entity light="type: directional; color: #FFF; intensity: 0.4" position="-0.5 1 1"></a-entity>
+
+      <!-- Models -->
+      <a-assets>
+        <a-asset-item id="s-obj" src="resource/model.obj"></a-asset-item>
+        <a-asset-item id="s-mtl" src="resource/model.mtl"></a-asset-item>
+      </a-assets>
+      <a-entity id="model-parent" position="0 0 0" rotation="0 0 0">
+        <a-obj-model id="a-model"
+          src="#s-obj" mtl="#s-mtl"
+          position="0 0 0"
+          scale="1 1 1"
+          rotation="0 0 0" model-loader>
+        </a-obj-model>
+      </a-entity>
+    </a-scene>
+  </body>
+</html>
