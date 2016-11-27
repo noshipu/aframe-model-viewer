@@ -22,7 +22,7 @@
         var currentRotation;
         var clickPosX = 0;
         var clickPosY = 0;
-        var rotationY = 0;
+        var rotation = { x: 0 , y: 0, z: 0 };
 
         // can touch device?
         var isTouch = ('ontouchstart' in window);
@@ -30,7 +30,7 @@
         $('#a-scene').bind({
           'touchstart mousedown': function(e) {
             clicking = true;
-            rotationY = $('#model-parent').attr("rotation").y;
+            rotation = $('#model-parent').attr("rotation");
             clickPosX = (isTouch ? event.changedTouches[0].pageX : e.pageX);
             clickPosY = (isTouch ? event.changedTouches[0].pageY : e.pageY);
           },
@@ -39,10 +39,15 @@
             //e.preventDefault();
             var x = (isTouch ? event.changedTouches[0].pageX : e.pageX) - clickPosX;
             var y = (isTouch ? event.changedTouches[0].pageY : e.pageY) - clickPosY;
-            rotationY = rotationY + (x * kRotateSpeed);
+            var rad = rotation.y * Math.PI / 180;
+
+            rotation.y = rotation.y + (x * kRotateSpeed);
+            rotation.x = rotation.x + (Math.cos(rad) * y * kRotateSpeed);
+            rotation.z = rotation.z + (Math.sin(rad) * y * kRotateSpeed);
+
             $('#model-parent').attr(
               "rotation",
-              "0 " + rotationY  + " 0"
+              rotation.x + " " + rotation.y  + " " + rotation.z
             );
             clickPosX = (isTouch ? event.changedTouches[0].pageX : e.pageX);
             clickPosY = (isTouch ? event.changedTouches[0].pageY : e.pageY);
